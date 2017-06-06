@@ -1,0 +1,749 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="StockTrackerModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="hypothesis_result">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="stock_id" Type="int" />
+          <Property Name="hypo" Type="varchar" MaxLength="100" />
+          <Property Name="success" Type="int" />
+          <Property Name="fail" Type="int" />
+          <Property Name="percentage" Type="float" />
+          <Property Name="comment" Type="text" />
+        </EntityType>
+        <EntityType Name="stock">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="stock_name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="stock_code" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="IsDelisted" Type="bool" Nullable="false" />
+        </EntityType>
+        <EntityType Name="stock_buysell_point">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="buy_point" Type="int" />
+          <Property Name="sell_point" Type="int" />
+          <Property Name="stock_history_id" Type="int" />
+        </EntityType>
+        <EntityType Name="stock_history">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="stock_id" Type="int" Nullable="false" />
+          <Property Name="stock_day" Type="date" Nullable="false" />
+          <Property Name="open_price" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="close_price" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="min_price" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="max_price" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="trade_num" Type="bigint" Nullable="false" />
+          <Property Name="trade_money" Type="decimal" Precision="20" Scale="2" Nullable="false" />
+          <Property Name="turnover" Type="float" />
+          <Property Name="swing" Type="float" />
+          <Property Name="diff_rate" Type="float" />
+          <Property Name="trading_date" Type="int" />
+        </EntityType>
+        <EntityType Name="stock_trading_date">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="trading_date" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="stockkdj">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="stock_id" Type="int" Nullable="false" />
+          <Property Name="stock_date" Type="date" Nullable="false" />
+          <Property Name="k" Type="float" Nullable="false" />
+          <Property Name="d" Type="float" Nullable="false" />
+          <Property Name="j" Type="float" Nullable="false" />
+          <Property Name="rsv" Type="float" Nullable="false" />
+          <Property Name="stock_history_id" Type="int" />
+          <Property Name="trading_date" Type="int" />
+        </EntityType>
+        <EntityType Name="stockma">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="stock_id" Type="int" Nullable="false" />
+          <Property Name="stock_date" Type="date" Nullable="false" />
+          <Property Name="ma5" Type="decimal" Precision="11" Scale="2" Nullable="false" />
+          <Property Name="ma10" Type="decimal" Precision="11" Scale="2" Nullable="false" />
+          <Property Name="ma20" Type="decimal" Precision="11" Scale="2" Nullable="false" />
+          <Property Name="ma30" Type="decimal" Precision="11" Scale="2" Nullable="false" />
+          <Property Name="ma60" Type="decimal" Precision="11" Scale="2" Nullable="false" />
+          <Property Name="ma120" Type="decimal" Precision="11" Scale="2" Nullable="false" />
+          <Property Name="ma20_raisedays" Type="int" />
+          <Property Name="ma20_dropdays" Type="int" />
+          <Property Name="ma30_raisedays" Type="int" />
+          <Property Name="ma30_dropdays" Type="int" />
+          <Property Name="stock_history_id" Type="int" />
+        </EntityType>
+        <EntityType Name="stockmacd">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="stock_id" Type="int" Nullable="false" />
+          <Property Name="stock_day" Type="date" Nullable="false" />
+          <Property Name="ema12" Type="float" Nullable="false" />
+          <Property Name="ema26" Type="float" Nullable="false" />
+          <Property Name="diff" Type="float" Nullable="false" />
+          <Property Name="dea" Type="float" Nullable="false" />
+          <Property Name="macd" Type="float" Nullable="false" />
+          <Property Name="stock_history_id" Type="int" />
+        </EntityType>
+        <Association Name="hypothesis_result_ibfk_1">
+          <End Role="stock" Type="Self.stock" Multiplicity="0..1" />
+          <End Role="hypothesis_result" Type="Self.hypothesis_result" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="hypothesis_result">
+              <PropertyRef Name="stock_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="stock_buysell_point_ibfk_1">
+          <End Role="stock_history" Type="Self.stock_history" Multiplicity="0..1" />
+          <End Role="stock_buysell_point" Type="Self.stock_buysell_point" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock_history">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="stock_buysell_point">
+              <PropertyRef Name="stock_history_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="stock_history_ibfk_1">
+          <End Role="stock" Type="Self.stock" Multiplicity="1" />
+          <End Role="stock_history" Type="Self.stock_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="stock_history">
+              <PropertyRef Name="stock_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="stock_history_ibfk_2">
+          <End Role="stock_trading_date" Type="Self.stock_trading_date" Multiplicity="0..1" />
+          <End Role="stock_history" Type="Self.stock_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock_trading_date">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="stock_history">
+              <PropertyRef Name="trading_date" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="stockkdj_ibfk_1">
+          <End Role="stock" Type="Self.stock" Multiplicity="1" />
+          <End Role="stockkdj" Type="Self.stockkdj" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="stockkdj">
+              <PropertyRef Name="stock_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="stockkdj_ibfk_2">
+          <End Role="stock_history" Type="Self.stock_history" Multiplicity="0..1" />
+          <End Role="stockkdj" Type="Self.stockkdj" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock_history">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="stockkdj">
+              <PropertyRef Name="stock_history_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="stockkdj_ibfk_3">
+          <End Role="stock_trading_date" Type="Self.stock_trading_date" Multiplicity="0..1" />
+          <End Role="stockkdj" Type="Self.stockkdj" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock_trading_date">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="stockkdj">
+              <PropertyRef Name="trading_date" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="stockma_ibfk_1">
+          <End Role="stock" Type="Self.stock" Multiplicity="1" />
+          <End Role="stockma" Type="Self.stockma" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="stockma">
+              <PropertyRef Name="stock_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="stockma_ibfk_2">
+          <End Role="stock_history" Type="Self.stock_history" Multiplicity="0..1" />
+          <End Role="stockma" Type="Self.stockma" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock_history">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="stockma">
+              <PropertyRef Name="stock_history_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="stockmacd_ibfk_1">
+          <End Role="stock" Type="Self.stock" Multiplicity="1" />
+          <End Role="stockmacd" Type="Self.stockmacd" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="stockmacd">
+              <PropertyRef Name="stock_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="stockmacd_ibfk_2">
+          <End Role="stock_history" Type="Self.stock_history" Multiplicity="0..1" />
+          <End Role="stockmacd" Type="Self.stockmacd" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock_history">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="stockmacd">
+              <PropertyRef Name="stock_history_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="StockTrackerModelStoreContainer">
+          <EntitySet Name="hypothesis_result" EntityType="Self.hypothesis_result" Schema="stocktracker" store:Type="Tables" />
+          <EntitySet Name="stock" EntityType="Self.stock" Schema="stocktracker" store:Type="Tables" />
+          <EntitySet Name="stock_buysell_point" EntityType="Self.stock_buysell_point" Schema="stocktracker" store:Type="Tables" />
+          <EntitySet Name="stock_history" EntityType="Self.stock_history" Schema="stocktracker" store:Type="Tables" />
+          <EntitySet Name="stock_trading_date" EntityType="Self.stock_trading_date" Schema="stocktracker" store:Type="Tables" />
+          <EntitySet Name="stockkdj" EntityType="Self.stockkdj" Schema="stocktracker" store:Type="Tables" />
+          <EntitySet Name="stockma" EntityType="Self.stockma" Schema="stocktracker" store:Type="Tables" />
+          <EntitySet Name="stockmacd" EntityType="Self.stockmacd" Schema="stocktracker" store:Type="Tables" />
+          <AssociationSet Name="hypothesis_result_ibfk_1" Association="Self.hypothesis_result_ibfk_1">
+            <End Role="stock" EntitySet="stock" />
+            <End Role="hypothesis_result" EntitySet="hypothesis_result" />
+          </AssociationSet>
+          <AssociationSet Name="stock_buysell_point_ibfk_1" Association="Self.stock_buysell_point_ibfk_1">
+            <End Role="stock_history" EntitySet="stock_history" />
+            <End Role="stock_buysell_point" EntitySet="stock_buysell_point" />
+          </AssociationSet>
+          <AssociationSet Name="stock_history_ibfk_1" Association="Self.stock_history_ibfk_1">
+            <End Role="stock" EntitySet="stock" />
+            <End Role="stock_history" EntitySet="stock_history" />
+          </AssociationSet>
+          <AssociationSet Name="stock_history_ibfk_2" Association="Self.stock_history_ibfk_2">
+            <End Role="stock_trading_date" EntitySet="stock_trading_date" />
+            <End Role="stock_history" EntitySet="stock_history" />
+          </AssociationSet>
+          <AssociationSet Name="stockkdj_ibfk_1" Association="Self.stockkdj_ibfk_1">
+            <End Role="stock" EntitySet="stock" />
+            <End Role="stockkdj" EntitySet="stockkdj" />
+          </AssociationSet>
+          <AssociationSet Name="stockkdj_ibfk_2" Association="Self.stockkdj_ibfk_2">
+            <End Role="stock_history" EntitySet="stock_history" />
+            <End Role="stockkdj" EntitySet="stockkdj" />
+          </AssociationSet>
+          <AssociationSet Name="stockkdj_ibfk_3" Association="Self.stockkdj_ibfk_3">
+            <End Role="stock_trading_date" EntitySet="stock_trading_date" />
+            <End Role="stockkdj" EntitySet="stockkdj" />
+          </AssociationSet>
+          <AssociationSet Name="stockma_ibfk_1" Association="Self.stockma_ibfk_1">
+            <End Role="stock" EntitySet="stock" />
+            <End Role="stockma" EntitySet="stockma" />
+          </AssociationSet>
+          <AssociationSet Name="stockma_ibfk_2" Association="Self.stockma_ibfk_2">
+            <End Role="stock_history" EntitySet="stock_history" />
+            <End Role="stockma" EntitySet="stockma" />
+          </AssociationSet>
+          <AssociationSet Name="stockmacd_ibfk_1" Association="Self.stockmacd_ibfk_1">
+            <End Role="stock" EntitySet="stock" />
+            <End Role="stockmacd" EntitySet="stockmacd" />
+          </AssociationSet>
+          <AssociationSet Name="stockmacd_ibfk_2" Association="Self.stockmacd_ibfk_2">
+            <End Role="stock_history" EntitySet="stock_history" />
+            <End Role="stockmacd" EntitySet="stockmacd" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="StockTrackerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="stock">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="stock_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="stock_code" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="stock_history" Relationship="Self.stock_history_ibfk_1" FromRole="stock" ToRole="stock_history" />
+          <NavigationProperty Name="hypothesis_result" Relationship="StockTrackerModel.hypothesis_result_ibfk_1" FromRole="stock" ToRole="hypothesis_result" />
+          <NavigationProperty Name="stockkdjs" Relationship="StockTrackerModel.stockkdj_ibfk_1" FromRole="stock" ToRole="stockkdj" />
+          <NavigationProperty Name="stockmas" Relationship="StockTrackerModel.stockma_ibfk_1" FromRole="stock" ToRole="stockma" />
+          <NavigationProperty Name="stockmacds" Relationship="StockTrackerModel.stockmacd_ibfk_1" FromRole="stock" ToRole="stockmacd" />
+          <Property Name="IsDelisted" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="stock_history">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="stock_id" Type="Int32" Nullable="false" />
+          <Property Name="stock_day" Type="DateTime" Nullable="false" />
+          <Property Name="open_price" Type="Decimal" Nullable="false" />
+          <Property Name="close_price" Type="Decimal" Nullable="false" />
+          <Property Name="min_price" Type="Decimal" Nullable="false" />
+          <Property Name="max_price" Type="Decimal" Nullable="false" />
+          <Property Name="trade_num" Type="Int64" Nullable="false" />
+          <Property Name="trade_money" Type="Decimal" Nullable="false" />
+          <Property Name="turnover" Type="Single" />
+          <Property Name="swing" Type="Single" />
+          <Property Name="diff_rate" Type="Single" />
+          <NavigationProperty Name="stock" Relationship="Self.stock_history_ibfk_1" FromRole="stock_history" ToRole="stock" />
+          <NavigationProperty Name="stockkdjs" Relationship="StockTrackerModel.stockkdj_ibfk_2" FromRole="stock_history" ToRole="stockkdj" />
+          <NavigationProperty Name="stockmacds" Relationship="StockTrackerModel.stockmacd_ibfk_2" FromRole="stock_history" ToRole="stockmacd" />
+          <NavigationProperty Name="stockmas" Relationship="StockTrackerModel.stockma_ibfk_2" FromRole="stock_history" ToRole="stockma" />
+          <Property Name="trading_date" Type="Int32" />
+          <NavigationProperty Name="stock_buysell_point" Relationship="StockTrackerModel.stock_buysell_point_ibfk_1" FromRole="stock_history" ToRole="stock_buysell_point" />
+          <NavigationProperty Name="stock_trading_date" Relationship="StockTrackerModel.stock_history_ibfk_2" FromRole="stock_history" ToRole="stock_trading_date" />
+        </EntityType>
+        <Association Name="stock_history_ibfk_1">
+          <End Role="stock" Type="Self.stock" Multiplicity="1" />
+          <End Role="stock_history" Type="Self.stock_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="stock_history">
+              <PropertyRef Name="stock_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="StockTrackerEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="stocks" EntityType="Self.stock" />
+          <EntitySet Name="stock_history" EntityType="Self.stock_history" />
+          <AssociationSet Name="stock_history_ibfk_1" Association="Self.stock_history_ibfk_1">
+            <End Role="stock" EntitySet="stocks" />
+            <End Role="stock_history" EntitySet="stock_history" />
+          </AssociationSet>
+          <EntitySet Name="hypothesis_result" EntityType="StockTrackerModel.hypothesis_result" />
+          <AssociationSet Name="hypothesis_result_ibfk_1" Association="StockTrackerModel.hypothesis_result_ibfk_1">
+            <End Role="stock" EntitySet="stocks" />
+            <End Role="hypothesis_result" EntitySet="hypothesis_result" />
+          </AssociationSet>
+          <EntitySet Name="stockkdjs" EntityType="StockTrackerModel.stockkdj" />
+          <AssociationSet Name="stockkdj_ibfk_1" Association="StockTrackerModel.stockkdj_ibfk_1">
+            <End Role="stock" EntitySet="stocks" />
+            <End Role="stockkdj" EntitySet="stockkdjs" />
+          </AssociationSet>
+          <EntitySet Name="stockmas" EntityType="StockTrackerModel.stockma" />
+          <AssociationSet Name="stockma_ibfk_1" Association="StockTrackerModel.stockma_ibfk_1">
+            <End Role="stock" EntitySet="stocks" />
+            <End Role="stockma" EntitySet="stockmas" />
+          </AssociationSet>
+          <EntitySet Name="stockmacds" EntityType="StockTrackerModel.stockmacd" />
+          <AssociationSet Name="stockmacd_ibfk_1" Association="StockTrackerModel.stockmacd_ibfk_1">
+            <End Role="stock" EntitySet="stocks" />
+            <End Role="stockmacd" EntitySet="stockmacds" />
+          </AssociationSet>
+          <AssociationSet Name="stockkdj_ibfk_2" Association="StockTrackerModel.stockkdj_ibfk_2">
+            <End Role="stock_history" EntitySet="stock_history" />
+            <End Role="stockkdj" EntitySet="stockkdjs" />
+          </AssociationSet>
+          <AssociationSet Name="stockmacd_ibfk_2" Association="StockTrackerModel.stockmacd_ibfk_2">
+            <End Role="stock_history" EntitySet="stock_history" />
+            <End Role="stockmacd" EntitySet="stockmacds" />
+          </AssociationSet>
+          <AssociationSet Name="stockma_ibfk_2" Association="StockTrackerModel.stockma_ibfk_2">
+            <End Role="stock_history" EntitySet="stock_history" />
+            <End Role="stockma" EntitySet="stockmas" />
+          </AssociationSet>
+          <EntitySet Name="stock_buysell_point" EntityType="StockTrackerModel.stock_buysell_point" />
+          <AssociationSet Name="stock_buysell_point_ibfk_1" Association="StockTrackerModel.stock_buysell_point_ibfk_1">
+            <End Role="stock_history" EntitySet="stock_history" />
+            <End Role="stock_buysell_point" EntitySet="stock_buysell_point" />
+          </AssociationSet>
+          <EntitySet Name="stock_trading_date" EntityType="StockTrackerModel.stock_trading_date" />
+          <AssociationSet Name="stock_history_ibfk_2" Association="StockTrackerModel.stock_history_ibfk_2">
+            <End Role="stock_trading_date" EntitySet="stock_trading_date" />
+            <End Role="stock_history" EntitySet="stock_history" />
+          </AssociationSet>
+          <AssociationSet Name="stockkdj_ibfk_3" Association="StockTrackerModel.stockkdj_ibfk_3">
+            <End Role="stock_trading_date" EntitySet="stock_trading_date" />
+            <End Role="stockkdj" EntitySet="stockkdjs" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="hypothesis_result">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="stock_id" Type="Int32" />
+          <Property Name="hypo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="success" Type="Int32" />
+          <Property Name="fail" Type="Int32" />
+          <Property Name="percentage" Type="Single" />
+          <Property Name="comment" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="stock" Relationship="StockTrackerModel.hypothesis_result_ibfk_1" FromRole="hypothesis_result" ToRole="stock" />
+        </EntityType>
+        <Association Name="hypothesis_result_ibfk_1">
+          <End Type="StockTrackerModel.stock" Role="stock" Multiplicity="0..1" />
+          <End Type="StockTrackerModel.hypothesis_result" Role="hypothesis_result" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="hypothesis_result">
+              <PropertyRef Name="stock_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="stockkdj">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="stock_id" Type="Int32" Nullable="false" />
+          <Property Name="stock_date" Type="DateTime" Nullable="false" />
+          <Property Name="k" Type="Single" Nullable="false" />
+          <Property Name="d" Type="Single" Nullable="false" />
+          <Property Name="j" Type="Single" Nullable="false" />
+          <Property Name="rsv" Type="Single" Nullable="false" />
+          <NavigationProperty Name="stock" Relationship="StockTrackerModel.stockkdj_ibfk_1" FromRole="stockkdj" ToRole="stock" />
+          <Property Name="stock_history_id" Type="Int32" />
+          <NavigationProperty Name="stock_history" Relationship="StockTrackerModel.stockkdj_ibfk_2" FromRole="stockkdj" ToRole="stock_history" />
+          <Property Name="trading_date" Type="Int32" />
+          <NavigationProperty Name="stock_trading_date" Relationship="StockTrackerModel.stockkdj_ibfk_3" FromRole="stockkdj" ToRole="stock_trading_date" />
+        </EntityType>
+        <Association Name="stockkdj_ibfk_1">
+          <End Type="StockTrackerModel.stock" Role="stock" Multiplicity="1" />
+          <End Type="StockTrackerModel.stockkdj" Role="stockkdj" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="stockkdj">
+              <PropertyRef Name="stock_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="stockma">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="stock_id" Type="Int32" Nullable="false" />
+          <Property Name="stock_date" Type="DateTime" Nullable="false" />
+          <Property Name="ma5" Type="Decimal" Nullable="false" />
+          <Property Name="ma10" Type="Decimal" Nullable="false" />
+          <Property Name="ma20" Type="Decimal" Nullable="false" />
+          <Property Name="ma30" Type="Decimal" Nullable="false" />
+          <Property Name="ma60" Type="Decimal" Nullable="false" />
+          <Property Name="ma120" Type="Decimal" Nullable="false" />
+          <NavigationProperty Name="stock" Relationship="StockTrackerModel.stockma_ibfk_1" FromRole="stockma" ToRole="stock" />
+          <Property Name="ma20_raisedays" Type="Int32" />
+          <Property Name="ma20_dropdays" Type="Int32" />
+          <Property Name="ma30_raisedays" Type="Int32" />
+          <Property Name="ma30_dropdays" Type="Int32" />
+          <Property Name="stock_history_id" Type="Int32" />
+          <NavigationProperty Name="stock_history" Relationship="StockTrackerModel.stockma_ibfk_2" FromRole="stockma" ToRole="stock_history" />
+        </EntityType>
+        <Association Name="stockma_ibfk_1">
+          <End Type="StockTrackerModel.stock" Role="stock" Multiplicity="1" />
+          <End Type="StockTrackerModel.stockma" Role="stockma" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="stockma">
+              <PropertyRef Name="stock_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="stockmacd">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="stock_id" Type="Int32" Nullable="false" />
+          <Property Name="stock_day" Type="DateTime" Nullable="false" />
+          <Property Name="ema12" Type="Single" Nullable="false" />
+          <Property Name="ema26" Type="Single" Nullable="false" />
+          <Property Name="diff" Type="Single" Nullable="false" />
+          <Property Name="dea" Type="Single" Nullable="false" />
+          <Property Name="macd" Type="Single" Nullable="false" />
+          <NavigationProperty Name="stock" Relationship="StockTrackerModel.stockmacd_ibfk_1" FromRole="stockmacd" ToRole="stock" />
+          <Property Name="stock_history_id" Type="Int32" />
+          <NavigationProperty Name="stock_history" Relationship="StockTrackerModel.stockmacd_ibfk_2" FromRole="stockmacd" ToRole="stock_history" />
+        </EntityType>
+        <Association Name="stockmacd_ibfk_1">
+          <End Type="StockTrackerModel.stock" Role="stock" Multiplicity="1" />
+          <End Type="StockTrackerModel.stockmacd" Role="stockmacd" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="stockmacd">
+              <PropertyRef Name="stock_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="stockkdj_ibfk_2">
+          <End Type="StockTrackerModel.stock_history" Role="stock_history" Multiplicity="0..1" />
+          <End Type="StockTrackerModel.stockkdj" Role="stockkdj" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock_history">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="stockkdj">
+              <PropertyRef Name="stock_history_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="stockmacd_ibfk_2">
+          <End Type="StockTrackerModel.stock_history" Role="stock_history" Multiplicity="0..1" />
+          <End Type="StockTrackerModel.stockmacd" Role="stockmacd" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock_history">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="stockmacd">
+              <PropertyRef Name="stock_history_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="stockma_ibfk_2">
+          <End Type="StockTrackerModel.stock_history" Role="stock_history" Multiplicity="0..1" />
+          <End Type="StockTrackerModel.stockma" Role="stockma" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock_history">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="stockma">
+              <PropertyRef Name="stock_history_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="stock_buysell_point">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="buy_point" Type="Int32" />
+          <Property Name="sell_point" Type="Int32" />
+          <Property Name="stock_history_id" Type="Int32" />
+          <NavigationProperty Name="stock_history" Relationship="StockTrackerModel.stock_buysell_point_ibfk_1" FromRole="stock_buysell_point" ToRole="stock_history" />
+        </EntityType>
+        <Association Name="stock_buysell_point_ibfk_1">
+          <End Type="StockTrackerModel.stock_history" Role="stock_history" Multiplicity="0..1" />
+          <End Type="StockTrackerModel.stock_buysell_point" Role="stock_buysell_point" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock_history">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="stock_buysell_point">
+              <PropertyRef Name="stock_history_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="stock_trading_date">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="trading_date" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="stock_history" Relationship="StockTrackerModel.stock_history_ibfk_2" FromRole="stock_trading_date" ToRole="stock_history" />
+          <NavigationProperty Name="stockkdjs" Relationship="StockTrackerModel.stockkdj_ibfk_3" FromRole="stock_trading_date" ToRole="stockkdj" />
+        </EntityType>
+        <Association Name="stock_history_ibfk_2">
+          <End Type="StockTrackerModel.stock_trading_date" Role="stock_trading_date" Multiplicity="0..1" />
+          <End Type="StockTrackerModel.stock_history" Role="stock_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock_trading_date">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="stock_history">
+              <PropertyRef Name="trading_date" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="stockkdj_ibfk_3">
+          <End Type="StockTrackerModel.stock_trading_date" Role="stock_trading_date" Multiplicity="0..1" />
+          <End Type="StockTrackerModel.stockkdj" Role="stockkdj" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock_trading_date">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="stockkdj">
+              <PropertyRef Name="trading_date" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="StockTrackerModelStoreContainer" CdmEntityContainer="StockTrackerEntities">
+          <EntitySetMapping Name="stocks">
+            <EntityTypeMapping TypeName="StockTrackerModel.stock">
+              <MappingFragment StoreEntitySet="stock">
+                <ScalarProperty Name="IsDelisted" ColumnName="IsDelisted" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="stock_name" ColumnName="stock_name" />
+                <ScalarProperty Name="stock_code" ColumnName="stock_code" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="stock_history">
+            <EntityTypeMapping TypeName="StockTrackerModel.stock_history">
+              <MappingFragment StoreEntitySet="stock_history">
+                <ScalarProperty Name="trading_date" ColumnName="trading_date" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="stock_id" ColumnName="stock_id" />
+                <ScalarProperty Name="stock_day" ColumnName="stock_day" />
+                <ScalarProperty Name="open_price" ColumnName="open_price" />
+                <ScalarProperty Name="close_price" ColumnName="close_price" />
+                <ScalarProperty Name="min_price" ColumnName="min_price" />
+                <ScalarProperty Name="max_price" ColumnName="max_price" />
+                <ScalarProperty Name="trade_num" ColumnName="trade_num" />
+                <ScalarProperty Name="trade_money" ColumnName="trade_money" />
+                <ScalarProperty Name="turnover" ColumnName="turnover" />
+                <ScalarProperty Name="swing" ColumnName="swing" />
+                <ScalarProperty Name="diff_rate" ColumnName="diff_rate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="hypothesis_result">
+            <EntityTypeMapping TypeName="StockTrackerModel.hypothesis_result">
+              <MappingFragment StoreEntitySet="hypothesis_result">
+                <ScalarProperty Name="comment" ColumnName="comment" />
+                <ScalarProperty Name="percentage" ColumnName="percentage" />
+                <ScalarProperty Name="fail" ColumnName="fail" />
+                <ScalarProperty Name="success" ColumnName="success" />
+                <ScalarProperty Name="hypo" ColumnName="hypo" />
+                <ScalarProperty Name="stock_id" ColumnName="stock_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="stockkdjs">
+            <EntityTypeMapping TypeName="StockTrackerModel.stockkdj">
+              <MappingFragment StoreEntitySet="stockkdj">
+                <ScalarProperty Name="trading_date" ColumnName="trading_date" />
+                <ScalarProperty Name="stock_history_id" ColumnName="stock_history_id" />
+                <ScalarProperty Name="rsv" ColumnName="rsv" />
+                <ScalarProperty Name="j" ColumnName="j" />
+                <ScalarProperty Name="d" ColumnName="d" />
+                <ScalarProperty Name="k" ColumnName="k" />
+                <ScalarProperty Name="stock_date" ColumnName="stock_date" />
+                <ScalarProperty Name="stock_id" ColumnName="stock_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="stockmas">
+            <EntityTypeMapping TypeName="StockTrackerModel.stockma">
+              <MappingFragment StoreEntitySet="stockma">
+                <ScalarProperty Name="stock_history_id" ColumnName="stock_history_id" />
+                <ScalarProperty Name="ma30_dropdays" ColumnName="ma30_dropdays" />
+                <ScalarProperty Name="ma30_raisedays" ColumnName="ma30_raisedays" />
+                <ScalarProperty Name="ma20_dropdays" ColumnName="ma20_dropdays" />
+                <ScalarProperty Name="ma20_raisedays" ColumnName="ma20_raisedays" />
+                <ScalarProperty Name="ma120" ColumnName="ma120" />
+                <ScalarProperty Name="ma60" ColumnName="ma60" />
+                <ScalarProperty Name="ma30" ColumnName="ma30" />
+                <ScalarProperty Name="ma20" ColumnName="ma20" />
+                <ScalarProperty Name="ma10" ColumnName="ma10" />
+                <ScalarProperty Name="ma5" ColumnName="ma5" />
+                <ScalarProperty Name="stock_date" ColumnName="stock_date" />
+                <ScalarProperty Name="stock_id" ColumnName="stock_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="stockmacds">
+            <EntityTypeMapping TypeName="StockTrackerModel.stockmacd">
+              <MappingFragment StoreEntitySet="stockmacd">
+                <ScalarProperty Name="stock_history_id" ColumnName="stock_history_id" />
+                <ScalarProperty Name="macd" ColumnName="macd" />
+                <ScalarProperty Name="dea" ColumnName="dea" />
+                <ScalarProperty Name="diff" ColumnName="diff" />
+                <ScalarProperty Name="ema26" ColumnName="ema26" />
+                <ScalarProperty Name="ema12" ColumnName="ema12" />
+                <ScalarProperty Name="stock_day" ColumnName="stock_day" />
+                <ScalarProperty Name="stock_id" ColumnName="stock_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="stock_buysell_point">
+            <EntityTypeMapping TypeName="StockTrackerModel.stock_buysell_point">
+              <MappingFragment StoreEntitySet="stock_buysell_point">
+                <ScalarProperty Name="stock_history_id" ColumnName="stock_history_id" />
+                <ScalarProperty Name="sell_point" ColumnName="sell_point" />
+                <ScalarProperty Name="buy_point" ColumnName="buy_point" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="stock_trading_date">
+            <EntityTypeMapping TypeName="StockTrackerModel.stock_trading_date">
+              <MappingFragment StoreEntitySet="stock_trading_date">
+                <ScalarProperty Name="trading_date" ColumnName="trading_date" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
