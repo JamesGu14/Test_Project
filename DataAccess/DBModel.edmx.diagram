@@ -24,6 +24,8 @@
         <EntityTypeShape EntityType="StockTrackerModel.stock_trading_date" Width="1.5" PointX="5.375" PointY="6.875" />
         <AssociationConnector Association="StockTrackerModel.stock_history_ibfk_2" />
         <AssociationConnector Association="StockTrackerModel.stockkdj_ibfk_3" />
+        <EntityTypeShape EntityType="StockTrackerModel.stock_extend_info" Width="1.5" PointX="3" PointY="23.5" />
+        <AssociationConnector Association="StockTrackerModel.stock_extend_info_ibfk_1" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

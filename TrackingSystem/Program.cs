@@ -29,11 +29,11 @@ namespace TrackingSystem
             // new Program().KDJ_Golden();
 
             // A2 均线多头排列
-            // new Program().MA_LongHedging();
+            new Program().MA_LongHedging();
 
             // A3 MACD底背离
-            
-            
+
+
             // A4 黄金坑底部掘金 ？？
             // 
             // --- B.K线形态

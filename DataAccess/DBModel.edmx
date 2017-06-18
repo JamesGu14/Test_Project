@@ -35,6 +35,21 @@
           <Property Name="sell_point" Type="int" />
           <Property Name="stock_history_id" Type="int" />
         </EntityType>
+        <EntityType Name="stock_extend_info">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="stock_id" Type="int" Nullable="false" />
+          <Property Name="company_fullname" Type="varchar" MaxLength="100" />
+          <Property Name="listed_date" Type="date" />
+          <Property Name="general_capital" Type="bigint" />
+          <Property Name="circulation_capital" Type="bigint" />
+          <Property Name="region" Type="varchar" MaxLength="20" />
+          <Property Name="province" Type="varchar" MaxLength="20" />
+          <Property Name="industry" Type="varchar" MaxLength="50" />
+          <Property Name="company_website" Type="varchar" MaxLength="100" />
+        </EntityType>
         <EntityType Name="stock_history">
           <Key>
             <PropertyRef Name="id" />
@@ -128,6 +143,18 @@
             </Principal>
             <Dependent Role="stock_buysell_point">
               <PropertyRef Name="stock_history_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="stock_extend_info_ibfk_1">
+          <End Role="stock" Type="Self.stock" Multiplicity="1" />
+          <End Role="stock_extend_info" Type="Self.stock_extend_info" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="stock_extend_info">
+              <PropertyRef Name="stock_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -243,6 +270,7 @@
           <EntitySet Name="hypothesis_result" EntityType="Self.hypothesis_result" Schema="stocktracker" store:Type="Tables" />
           <EntitySet Name="stock" EntityType="Self.stock" Schema="stocktracker" store:Type="Tables" />
           <EntitySet Name="stock_buysell_point" EntityType="Self.stock_buysell_point" Schema="stocktracker" store:Type="Tables" />
+          <EntitySet Name="stock_extend_info" EntityType="Self.stock_extend_info" Schema="stocktracker" store:Type="Tables" />
           <EntitySet Name="stock_history" EntityType="Self.stock_history" Schema="stocktracker" store:Type="Tables" />
           <EntitySet Name="stock_trading_date" EntityType="Self.stock_trading_date" Schema="stocktracker" store:Type="Tables" />
           <EntitySet Name="stockkdj" EntityType="Self.stockkdj" Schema="stocktracker" store:Type="Tables" />
@@ -255,6 +283,10 @@
           <AssociationSet Name="stock_buysell_point_ibfk_1" Association="Self.stock_buysell_point_ibfk_1">
             <End Role="stock_history" EntitySet="stock_history" />
             <End Role="stock_buysell_point" EntitySet="stock_buysell_point" />
+          </AssociationSet>
+          <AssociationSet Name="stock_extend_info_ibfk_1" Association="Self.stock_extend_info_ibfk_1">
+            <End Role="stock" EntitySet="stock" />
+            <End Role="stock_extend_info" EntitySet="stock_extend_info" />
           </AssociationSet>
           <AssociationSet Name="stock_history_ibfk_1" Association="Self.stock_history_ibfk_1">
             <End Role="stock" EntitySet="stock" />
@@ -310,6 +342,7 @@
           <NavigationProperty Name="stockmas" Relationship="StockTrackerModel.stockma_ibfk_1" FromRole="stock" ToRole="stockma" />
           <NavigationProperty Name="stockmacds" Relationship="StockTrackerModel.stockmacd_ibfk_1" FromRole="stock" ToRole="stockmacd" />
           <Property Name="IsDelisted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="stock_extend_info" Relationship="StockTrackerModel.stock_extend_info_ibfk_1" FromRole="stock" ToRole="stock_extend_info" />
         </EntityType>
         <EntityType Name="stock_history">
           <Key>
@@ -399,6 +432,11 @@
           <AssociationSet Name="stockkdj_ibfk_3" Association="StockTrackerModel.stockkdj_ibfk_3">
             <End Role="stock_trading_date" EntitySet="stock_trading_date" />
             <End Role="stockkdj" EntitySet="stockkdjs" />
+          </AssociationSet>
+          <EntitySet Name="stock_extend_info" EntityType="StockTrackerModel.stock_extend_info" />
+          <AssociationSet Name="stock_extend_info_ibfk_1" Association="StockTrackerModel.stock_extend_info_ibfk_1">
+            <End Role="stock" EntitySet="stocks" />
+            <End Role="stock_extend_info" EntitySet="stock_extend_info" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="hypothesis_result">
@@ -607,6 +645,34 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="stock_extend_info">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="stock_id" Type="Int32" Nullable="false" />
+          <Property Name="company_fullname" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="listed_date" Type="DateTime" />
+          <Property Name="general_capital" Type="Int64" />
+          <Property Name="circulation_capital" Type="Int64" />
+          <Property Name="region" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="province" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="industry" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="company_website" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="stock" Relationship="StockTrackerModel.stock_extend_info_ibfk_1" FromRole="stock_extend_info" ToRole="stock" />
+        </EntityType>
+        <Association Name="stock_extend_info_ibfk_1">
+          <End Type="StockTrackerModel.stock" Role="stock" Multiplicity="1" />
+          <End Type="StockTrackerModel.stock_extend_info" Role="stock_extend_info" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="stock_extend_info">
+              <PropertyRef Name="stock_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -719,6 +785,22 @@
             <EntityTypeMapping TypeName="StockTrackerModel.stock_trading_date">
               <MappingFragment StoreEntitySet="stock_trading_date">
                 <ScalarProperty Name="trading_date" ColumnName="trading_date" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="stock_extend_info">
+            <EntityTypeMapping TypeName="StockTrackerModel.stock_extend_info">
+              <MappingFragment StoreEntitySet="stock_extend_info">
+                <ScalarProperty Name="company_website" ColumnName="company_website" />
+                <ScalarProperty Name="industry" ColumnName="industry" />
+                <ScalarProperty Name="province" ColumnName="province" />
+                <ScalarProperty Name="region" ColumnName="region" />
+                <ScalarProperty Name="circulation_capital" ColumnName="circulation_capital" />
+                <ScalarProperty Name="general_capital" ColumnName="general_capital" />
+                <ScalarProperty Name="listed_date" ColumnName="listed_date" />
+                <ScalarProperty Name="company_fullname" ColumnName="company_fullname" />
+                <ScalarProperty Name="stock_id" ColumnName="stock_id" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>

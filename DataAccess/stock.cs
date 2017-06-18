@@ -21,6 +21,7 @@ namespace DataAccess
             this.stockkdjs = new HashSet<stockkdj>();
             this.stockmas = new HashSet<stockma>();
             this.stockmacds = new HashSet<stockmacd>();
+            this.stock_extend_info = new HashSet<stock_extend_info>();
         }
     
         public int id { get; set; }
@@ -33,5 +34,6 @@ namespace DataAccess
         public virtual ICollection<stockkdj> stockkdjs { get; set; }
         public virtual ICollection<stockma> stockmas { get; set; }
         public virtual ICollection<stockmacd> stockmacds { get; set; }
+        public virtual ICollection<stock_extend_info> stock_extend_info { get; set; }
     }
 }
