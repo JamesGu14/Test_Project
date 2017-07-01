@@ -12,20 +12,13 @@ namespace DataAccess
     using System;
     using System.Collections.Generic;
     
-    public partial class stock_extend_info
+    public partial class stock_category_ref
     {
         public int id { get; set; }
-        public int stock_id { get; set; }
-        public string company_fullname { get; set; }
-        public Nullable<System.DateTime> listed_date { get; set; }
-        public Nullable<long> general_capital { get; set; }
-        public Nullable<long> circulation_capital { get; set; }
-        public string region { get; set; }
-        public string province { get; set; }
-        public string industry { get; set; }
-        public string company_website { get; set; }
-        public string city { get; set; }
+        public Nullable<int> stock_id { get; set; }
+        public Nullable<int> category_id { get; set; }
     
         public virtual stock stock { get; set; }
+        public virtual stock_category stock_category { get; set; }
     }
 }

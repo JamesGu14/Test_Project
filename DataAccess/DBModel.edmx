@@ -17,6 +17,30 @@
           <Property Name="percentage" Type="float" />
           <Property Name="comment" Type="text" />
         </EntityType>
+        <EntityType Name="market_index">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="index_name" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="market_index_history">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="market_index_id" Type="int" />
+          <Property Name="trading_date_id" Type="int" />
+          <Property Name="min_price" Type="decimal" Precision="14" Scale="2" />
+          <Property Name="trade_num" Type="bigint" />
+          <Property Name="trade_money" Type="bigint" />
+          <Property Name="diff_money" Type="decimal" Precision="14" Scale="2" />
+          <Property Name="close_price" Type="decimal" Precision="14" Scale="2" />
+          <Property Name="open_price" Type="decimal" Precision="14" Scale="2" />
+          <Property Name="max_price" Type="decimal" Precision="14" Scale="2" />
+          <Property Name="diff_rate" Type="decimal" Precision="14" Scale="2" />
+          <Property Name="date" Type="date" />
+        </EntityType>
         <EntityType Name="stock">
           <Key>
             <PropertyRef Name="id" />
@@ -25,6 +49,7 @@
           <Property Name="stock_name" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="stock_code" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="IsDelisted" Type="bool" Nullable="false" />
+          <Property Name="pinyin" Type="varchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="stock_buysell_point">
           <Key>
@@ -34,6 +59,24 @@
           <Property Name="buy_point" Type="int" />
           <Property Name="sell_point" Type="int" />
           <Property Name="stock_history_id" Type="int" />
+        </EntityType>
+        <EntityType Name="stock_category">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="block_category" Type="varchar" MaxLength="20" />
+          <Property Name="child_category" Type="varchar" MaxLength="20" />
+          <Property Name="category_name" Type="varchar" MaxLength="20" />
+          <Property Name="category_code" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="stock_category_ref">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="stock_id" Type="int" />
+          <Property Name="category_id" Type="int" />
         </EntityType>
         <EntityType Name="stock_extend_info">
           <Key>
@@ -47,6 +90,7 @@
           <Property Name="circulation_capital" Type="bigint" />
           <Property Name="region" Type="varchar" MaxLength="20" />
           <Property Name="province" Type="varchar" MaxLength="20" />
+          <Property Name="city" Type="varchar" MaxLength="20" />
           <Property Name="industry" Type="varchar" MaxLength="50" />
           <Property Name="company_website" Type="varchar" MaxLength="100" />
         </EntityType>
@@ -67,6 +111,18 @@
           <Property Name="swing" Type="float" />
           <Property Name="diff_rate" Type="float" />
           <Property Name="trading_date" Type="int" />
+        </EntityType>
+        <EntityType Name="stock_income_statement_history">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="year" Type="int" />
+          <Property Name="stock_id" Type="int" />
+          <Property Name="revenue" Type="decimal" Precision="14" Scale="2" />
+          <Property Name="net_profit" Type="decimal" Precision="14" Scale="2" />
+          <Property Name="earnings_per_share" Type="decimal" Precision="4" Scale="4" />
+          <Property Name="total_assets" Type="decimal" Precision="14" Scale="2" />
         </EntityType>
         <EntityType Name="stock_trading_date">
           <Key>
@@ -134,6 +190,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="market_index_history_ibfk_1">
+          <End Role="stock_trading_date" Type="Self.stock_trading_date" Multiplicity="0..1" />
+          <End Role="market_index_history" Type="Self.market_index_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock_trading_date">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="market_index_history">
+              <PropertyRef Name="trading_date_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="market_index_history_ibfk_2">
+          <End Role="market_index" Type="Self.market_index" Multiplicity="0..1" />
+          <End Role="market_index_history" Type="Self.market_index_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="market_index">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="market_index_history">
+              <PropertyRef Name="market_index_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="stock_buysell_point_ibfk_1">
           <End Role="stock_history" Type="Self.stock_history" Multiplicity="0..1" />
           <End Role="stock_buysell_point" Type="Self.stock_buysell_point" Multiplicity="*" />
@@ -143,6 +223,30 @@
             </Principal>
             <Dependent Role="stock_buysell_point">
               <PropertyRef Name="stock_history_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="stock_category_ref_ibfk_1">
+          <End Role="stock" Type="Self.stock" Multiplicity="0..1" />
+          <End Role="stock_category_ref" Type="Self.stock_category_ref" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="stock_category_ref">
+              <PropertyRef Name="stock_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="stock_category_ref_ibfk_2">
+          <End Role="stock_category" Type="Self.stock_category" Multiplicity="0..1" />
+          <End Role="stock_category_ref" Type="Self.stock_category_ref" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock_category">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="stock_category_ref">
+              <PropertyRef Name="category_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -179,6 +283,18 @@
             </Principal>
             <Dependent Role="stock_history">
               <PropertyRef Name="trading_date" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="stock_income_statement_history_ibfk_1">
+          <End Role="stock" Type="Self.stock" Multiplicity="0..1" />
+          <End Role="stock_income_statement_history" Type="Self.stock_income_statement_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="stock_income_statement_history">
+              <PropertyRef Name="stock_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -268,10 +384,15 @@
         </Association>
         <EntityContainer Name="StockTrackerModelStoreContainer">
           <EntitySet Name="hypothesis_result" EntityType="Self.hypothesis_result" Schema="stocktracker" store:Type="Tables" />
+          <EntitySet Name="market_index" EntityType="Self.market_index" Schema="stocktracker" store:Type="Tables" />
+          <EntitySet Name="market_index_history" EntityType="Self.market_index_history" Schema="stocktracker" store:Type="Tables" />
           <EntitySet Name="stock" EntityType="Self.stock" Schema="stocktracker" store:Type="Tables" />
           <EntitySet Name="stock_buysell_point" EntityType="Self.stock_buysell_point" Schema="stocktracker" store:Type="Tables" />
+          <EntitySet Name="stock_category" EntityType="Self.stock_category" Schema="stocktracker" store:Type="Tables" />
+          <EntitySet Name="stock_category_ref" EntityType="Self.stock_category_ref" Schema="stocktracker" store:Type="Tables" />
           <EntitySet Name="stock_extend_info" EntityType="Self.stock_extend_info" Schema="stocktracker" store:Type="Tables" />
           <EntitySet Name="stock_history" EntityType="Self.stock_history" Schema="stocktracker" store:Type="Tables" />
+          <EntitySet Name="stock_income_statement_history" EntityType="Self.stock_income_statement_history" Schema="stocktracker" store:Type="Tables" />
           <EntitySet Name="stock_trading_date" EntityType="Self.stock_trading_date" Schema="stocktracker" store:Type="Tables" />
           <EntitySet Name="stockkdj" EntityType="Self.stockkdj" Schema="stocktracker" store:Type="Tables" />
           <EntitySet Name="stockma" EntityType="Self.stockma" Schema="stocktracker" store:Type="Tables" />
@@ -280,9 +401,25 @@
             <End Role="stock" EntitySet="stock" />
             <End Role="hypothesis_result" EntitySet="hypothesis_result" />
           </AssociationSet>
+          <AssociationSet Name="market_index_history_ibfk_1" Association="Self.market_index_history_ibfk_1">
+            <End Role="stock_trading_date" EntitySet="stock_trading_date" />
+            <End Role="market_index_history" EntitySet="market_index_history" />
+          </AssociationSet>
+          <AssociationSet Name="market_index_history_ibfk_2" Association="Self.market_index_history_ibfk_2">
+            <End Role="market_index" EntitySet="market_index" />
+            <End Role="market_index_history" EntitySet="market_index_history" />
+          </AssociationSet>
           <AssociationSet Name="stock_buysell_point_ibfk_1" Association="Self.stock_buysell_point_ibfk_1">
             <End Role="stock_history" EntitySet="stock_history" />
             <End Role="stock_buysell_point" EntitySet="stock_buysell_point" />
+          </AssociationSet>
+          <AssociationSet Name="stock_category_ref_ibfk_1" Association="Self.stock_category_ref_ibfk_1">
+            <End Role="stock" EntitySet="stock" />
+            <End Role="stock_category_ref" EntitySet="stock_category_ref" />
+          </AssociationSet>
+          <AssociationSet Name="stock_category_ref_ibfk_2" Association="Self.stock_category_ref_ibfk_2">
+            <End Role="stock_category" EntitySet="stock_category" />
+            <End Role="stock_category_ref" EntitySet="stock_category_ref" />
           </AssociationSet>
           <AssociationSet Name="stock_extend_info_ibfk_1" Association="Self.stock_extend_info_ibfk_1">
             <End Role="stock" EntitySet="stock" />
@@ -295,6 +432,10 @@
           <AssociationSet Name="stock_history_ibfk_2" Association="Self.stock_history_ibfk_2">
             <End Role="stock_trading_date" EntitySet="stock_trading_date" />
             <End Role="stock_history" EntitySet="stock_history" />
+          </AssociationSet>
+          <AssociationSet Name="stock_income_statement_history_ibfk_1" Association="Self.stock_income_statement_history_ibfk_1">
+            <End Role="stock" EntitySet="stock" />
+            <End Role="stock_income_statement_history" EntitySet="stock_income_statement_history" />
           </AssociationSet>
           <AssociationSet Name="stockkdj_ibfk_1" Association="Self.stockkdj_ibfk_1">
             <End Role="stock" EntitySet="stock" />
@@ -343,6 +484,9 @@
           <NavigationProperty Name="stockmacds" Relationship="StockTrackerModel.stockmacd_ibfk_1" FromRole="stock" ToRole="stockmacd" />
           <Property Name="IsDelisted" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="stock_extend_info" Relationship="StockTrackerModel.stock_extend_info_ibfk_1" FromRole="stock" ToRole="stock_extend_info" />
+          <Property Name="pinyin" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="stock_category_ref" Relationship="StockTrackerModel.stock_category_ref_ibfk_1" FromRole="stock" ToRole="stock_category_ref" />
+          <NavigationProperty Name="stock_income_statement_history" Relationship="StockTrackerModel.stock_income_statement_history_ibfk_1" FromRole="stock" ToRole="stock_income_statement_history" />
         </EntityType>
         <EntityType Name="stock_history">
           <Key>
@@ -437,6 +581,31 @@
           <AssociationSet Name="stock_extend_info_ibfk_1" Association="StockTrackerModel.stock_extend_info_ibfk_1">
             <End Role="stock" EntitySet="stocks" />
             <End Role="stock_extend_info" EntitySet="stock_extend_info" />
+          </AssociationSet>
+          <EntitySet Name="market_index" EntityType="StockTrackerModel.market_index" />
+          <EntitySet Name="market_index_history" EntityType="StockTrackerModel.market_index_history" />
+          <EntitySet Name="stock_category" EntityType="StockTrackerModel.stock_category" />
+          <EntitySet Name="stock_category_ref" EntityType="StockTrackerModel.stock_category_ref" />
+          <AssociationSet Name="market_index_history_ibfk_1" Association="StockTrackerModel.market_index_history_ibfk_1">
+            <End Role="stock_trading_date" EntitySet="stock_trading_date" />
+            <End Role="market_index_history" EntitySet="market_index_history" />
+          </AssociationSet>
+          <AssociationSet Name="market_index_history_ibfk_2" Association="StockTrackerModel.market_index_history_ibfk_2">
+            <End Role="market_index" EntitySet="market_index" />
+            <End Role="market_index_history" EntitySet="market_index_history" />
+          </AssociationSet>
+          <AssociationSet Name="stock_category_ref_ibfk_1" Association="StockTrackerModel.stock_category_ref_ibfk_1">
+            <End Role="stock" EntitySet="stocks" />
+            <End Role="stock_category_ref" EntitySet="stock_category_ref" />
+          </AssociationSet>
+          <AssociationSet Name="stock_category_ref_ibfk_2" Association="StockTrackerModel.stock_category_ref_ibfk_2">
+            <End Role="stock_category" EntitySet="stock_category" />
+            <End Role="stock_category_ref" EntitySet="stock_category_ref" />
+          </AssociationSet>
+          <EntitySet Name="stock_income_statement_history" EntityType="StockTrackerModel.stock_income_statement_history" />
+          <AssociationSet Name="stock_income_statement_history_ibfk_1" Association="StockTrackerModel.stock_income_statement_history_ibfk_1">
+            <End Role="stock" EntitySet="stocks" />
+            <End Role="stock_income_statement_history" EntitySet="stock_income_statement_history" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="hypothesis_result">
@@ -620,6 +789,7 @@
           <Property Name="trading_date" Type="DateTime" Nullable="false" />
           <NavigationProperty Name="stock_history" Relationship="StockTrackerModel.stock_history_ibfk_2" FromRole="stock_trading_date" ToRole="stock_history" />
           <NavigationProperty Name="stockkdjs" Relationship="StockTrackerModel.stockkdj_ibfk_3" FromRole="stock_trading_date" ToRole="stockkdj" />
+          <NavigationProperty Name="market_index_history" Relationship="StockTrackerModel.market_index_history_ibfk_1" FromRole="stock_trading_date" ToRole="market_index_history" />
         </EntityType>
         <Association Name="stock_history_ibfk_2">
           <End Type="StockTrackerModel.stock_trading_date" Role="stock_trading_date" Multiplicity="0..1" />
@@ -660,6 +830,7 @@
           <Property Name="industry" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="company_website" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="stock" Relationship="StockTrackerModel.stock_extend_info_ibfk_1" FromRole="stock_extend_info" ToRole="stock" />
+          <Property Name="city" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="stock_extend_info_ibfk_1">
           <End Type="StockTrackerModel.stock" Role="stock" Multiplicity="1" />
@@ -673,6 +844,127 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="market_index">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="index_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="market_index_history" Relationship="StockTrackerModel.market_index_history_ibfk_2" FromRole="market_index" ToRole="market_index_history" />
+        </EntityType>
+        <EntityType Name="market_index_history">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="market_index_id" Type="Int32" />
+          <Property Name="trading_date_id" Type="Int32" />
+          <Property Name="min_price" Type="Decimal" />
+          <Property Name="trade_num" Type="Int64" />
+          <Property Name="trade_money" Type="Int64" />
+          <Property Name="diff_money" Type="Decimal" />
+          <Property Name="close_price" Type="Decimal" />
+          <Property Name="open_price" Type="Decimal" />
+          <Property Name="max_price" Type="Decimal" />
+          <Property Name="diff_rate" Type="Decimal" />
+          <Property Name="date" Type="DateTime" />
+          <NavigationProperty Name="stock_trading_date" Relationship="StockTrackerModel.market_index_history_ibfk_1" FromRole="market_index_history" ToRole="stock_trading_date" />
+          <NavigationProperty Name="market_index" Relationship="StockTrackerModel.market_index_history_ibfk_2" FromRole="market_index_history" ToRole="market_index" />
+        </EntityType>
+        <EntityType Name="stock_category">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="block_category" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="child_category" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="category_name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="category_code" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="stock_category_ref" Relationship="StockTrackerModel.stock_category_ref_ibfk_2" FromRole="stock_category" ToRole="stock_category_ref" />
+        </EntityType>
+        <EntityType Name="stock_category_ref">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="stock_id" Type="Int32" />
+          <Property Name="category_id" Type="Int32" />
+          <NavigationProperty Name="stock" Relationship="StockTrackerModel.stock_category_ref_ibfk_1" FromRole="stock_category_ref" ToRole="stock" />
+          <NavigationProperty Name="stock_category" Relationship="StockTrackerModel.stock_category_ref_ibfk_2" FromRole="stock_category_ref" ToRole="stock_category" />
+        </EntityType>
+        <Association Name="market_index_history_ibfk_1">
+          <End Type="StockTrackerModel.stock_trading_date" Role="stock_trading_date" Multiplicity="0..1" />
+          <End Type="StockTrackerModel.market_index_history" Role="market_index_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock_trading_date">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="market_index_history">
+              <PropertyRef Name="trading_date_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="market_index_history_ibfk_2">
+          <End Type="StockTrackerModel.market_index" Role="market_index" Multiplicity="0..1" />
+          <End Type="StockTrackerModel.market_index_history" Role="market_index_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="market_index">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="market_index_history">
+              <PropertyRef Name="market_index_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="stock_category_ref_ibfk_1">
+          <End Type="StockTrackerModel.stock" Role="stock" Multiplicity="0..1" />
+          <End Type="StockTrackerModel.stock_category_ref" Role="stock_category_ref" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="stock_category_ref">
+              <PropertyRef Name="stock_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="stock_category_ref_ibfk_2">
+          <End Type="StockTrackerModel.stock_category" Role="stock_category" Multiplicity="0..1" />
+          <End Type="StockTrackerModel.stock_category_ref" Role="stock_category_ref" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock_category">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="stock_category_ref">
+              <PropertyRef Name="category_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="stock_income_statement_history">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="year" Type="Int32" />
+          <Property Name="stock_id" Type="Int32" />
+          <Property Name="revenue" Type="Decimal" />
+          <Property Name="net_profit" Type="Decimal" />
+          <Property Name="earnings_per_share" Type="Decimal" />
+          <Property Name="total_assets" Type="Decimal" />
+          <NavigationProperty Name="stock" Relationship="StockTrackerModel.stock_income_statement_history_ibfk_1" FromRole="stock_income_statement_history" ToRole="stock" />
+        </EntityType>
+        <Association Name="stock_income_statement_history_ibfk_1">
+          <End Type="StockTrackerModel.stock" Role="stock" Multiplicity="0..1" />
+          <End Type="StockTrackerModel.stock_income_statement_history" Role="stock_income_statement_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stock">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="stock_income_statement_history">
+              <PropertyRef Name="stock_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -682,6 +974,7 @@
           <EntitySetMapping Name="stocks">
             <EntityTypeMapping TypeName="StockTrackerModel.stock">
               <MappingFragment StoreEntitySet="stock">
+                <ScalarProperty Name="pinyin" ColumnName="pinyin" />
                 <ScalarProperty Name="IsDelisted" ColumnName="IsDelisted" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="stock_name" ColumnName="stock_name" />
@@ -792,6 +1085,7 @@
           <EntitySetMapping Name="stock_extend_info">
             <EntityTypeMapping TypeName="StockTrackerModel.stock_extend_info">
               <MappingFragment StoreEntitySet="stock_extend_info">
+                <ScalarProperty Name="city" ColumnName="city" />
                 <ScalarProperty Name="company_website" ColumnName="company_website" />
                 <ScalarProperty Name="industry" ColumnName="industry" />
                 <ScalarProperty Name="province" ColumnName="province" />
@@ -801,6 +1095,65 @@
                 <ScalarProperty Name="listed_date" ColumnName="listed_date" />
                 <ScalarProperty Name="company_fullname" ColumnName="company_fullname" />
                 <ScalarProperty Name="stock_id" ColumnName="stock_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="market_index">
+            <EntityTypeMapping TypeName="StockTrackerModel.market_index">
+              <MappingFragment StoreEntitySet="market_index">
+                <ScalarProperty Name="index_name" ColumnName="index_name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="market_index_history">
+            <EntityTypeMapping TypeName="StockTrackerModel.market_index_history">
+              <MappingFragment StoreEntitySet="market_index_history">
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="diff_rate" ColumnName="diff_rate" />
+                <ScalarProperty Name="max_price" ColumnName="max_price" />
+                <ScalarProperty Name="open_price" ColumnName="open_price" />
+                <ScalarProperty Name="close_price" ColumnName="close_price" />
+                <ScalarProperty Name="diff_money" ColumnName="diff_money" />
+                <ScalarProperty Name="trade_money" ColumnName="trade_money" />
+                <ScalarProperty Name="trade_num" ColumnName="trade_num" />
+                <ScalarProperty Name="min_price" ColumnName="min_price" />
+                <ScalarProperty Name="trading_date_id" ColumnName="trading_date_id" />
+                <ScalarProperty Name="market_index_id" ColumnName="market_index_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="stock_category">
+            <EntityTypeMapping TypeName="StockTrackerModel.stock_category">
+              <MappingFragment StoreEntitySet="stock_category">
+                <ScalarProperty Name="category_code" ColumnName="category_code" />
+                <ScalarProperty Name="category_name" ColumnName="category_name" />
+                <ScalarProperty Name="child_category" ColumnName="child_category" />
+                <ScalarProperty Name="block_category" ColumnName="block_category" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="stock_category_ref">
+            <EntityTypeMapping TypeName="StockTrackerModel.stock_category_ref">
+              <MappingFragment StoreEntitySet="stock_category_ref">
+                <ScalarProperty Name="category_id" ColumnName="category_id" />
+                <ScalarProperty Name="stock_id" ColumnName="stock_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="stock_income_statement_history">
+            <EntityTypeMapping TypeName="StockTrackerModel.stock_income_statement_history">
+              <MappingFragment StoreEntitySet="stock_income_statement_history">
+                <ScalarProperty Name="total_assets" ColumnName="total_assets" />
+                <ScalarProperty Name="earnings_per_share" ColumnName="earnings_per_share" />
+                <ScalarProperty Name="net_profit" ColumnName="net_profit" />
+                <ScalarProperty Name="revenue" ColumnName="revenue" />
+                <ScalarProperty Name="stock_id" ColumnName="stock_id" />
+                <ScalarProperty Name="year" ColumnName="year" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>

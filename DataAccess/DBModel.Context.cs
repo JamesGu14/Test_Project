@@ -34,5 +34,10 @@ namespace DataAccess
         public DbSet<stock_buysell_point> stock_buysell_point { get; set; }
         public DbSet<stock_trading_date> stock_trading_date { get; set; }
         public DbSet<stock_extend_info> stock_extend_info { get; set; }
+        public DbSet<market_index> market_index { get; set; }
+        public DbSet<market_index_history> market_index_history { get; set; }
+        public DbSet<stock_category> stock_category { get; set; }
+        public DbSet<stock_category_ref> stock_category_ref { get; set; }
+        public DbSet<stock_income_statement_history> stock_income_statement_history { get; set; }
     }
 }

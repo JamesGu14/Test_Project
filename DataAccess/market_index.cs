@@ -12,20 +12,16 @@ namespace DataAccess
     using System;
     using System.Collections.Generic;
     
-    public partial class stock_trading_date
+    public partial class market_index
     {
-        public stock_trading_date()
+        public market_index()
         {
-            this.stock_history = new HashSet<stock_history>();
-            this.stockkdjs = new HashSet<stockkdj>();
             this.market_index_history = new HashSet<market_index_history>();
         }
     
         public int id { get; set; }
-        public System.DateTime trading_date { get; set; }
+        public string index_name { get; set; }
     
-        public virtual ICollection<stock_history> stock_history { get; set; }
-        public virtual ICollection<stockkdj> stockkdjs { get; set; }
         public virtual ICollection<market_index_history> market_index_history { get; set; }
     }
 }

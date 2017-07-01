@@ -27,7 +27,7 @@ namespace DataImporter
             using (var dbContext = new StockTrackerEntities())
             {
                 // && s.id > 130 && s.stock_code != "002092" && 
-                STOCK_CODES = dbContext.stocks.Where(s => s.IsDelisted == false).Select(s => s.stock_code).ToList();
+                
 
                 
             }
@@ -235,6 +235,21 @@ namespace DataImporter
         }
         #endregion
 
+        public void ImportMarket()
+        {
+            //var monthList = new string[] { "201705", "201706" };
+
+            //foreach(var m in monthList)
+            //{
+            //    new Market().Import("399001", m);
+            //}
+
+            string SH_PATH = "C:\\new_tdx\\T0002\\export\\SH_999999.txt";
+            string SZ_PATH = "C:\\new_tdx\\T0002\\export\\SZ_399001.txt";
+            new Market2_TongDaXin().ImportData(SH_PATH);
+            new Market2_TongDaXin().ImportData(SZ_PATH);
+        }
+        
         public static void Main(string[] args)
         {
             // 获取股票列表
@@ -242,7 +257,10 @@ namespace DataImporter
 
             #region Manual import stock
             var program = new Program();
-            program.NewImport();
+
+            program.ImportMarket();
+
+            // program.NewImport();
             #endregion
 
             #region Calculate all KDJ

@@ -60,6 +60,8 @@
     <Compile Include="Calculations\MACD.cs" />
     <Compile Include="Calculations\MA_Trend.cs" />
     <Compile Include="ImportData\AllStocks.cs" />
+    <Compile Include="ImportData\Market.cs" />
+    <Compile Include="ImportData\Market2_TongDaXin.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ImportData\StockHistory.cs" />

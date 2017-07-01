@@ -22,12 +22,15 @@ namespace DataAccess
             this.stockmas = new HashSet<stockma>();
             this.stockmacds = new HashSet<stockmacd>();
             this.stock_extend_info = new HashSet<stock_extend_info>();
+            this.stock_category_ref = new HashSet<stock_category_ref>();
+            this.stock_income_statement_history = new HashSet<stock_income_statement_history>();
         }
     
         public int id { get; set; }
         public string stock_name { get; set; }
         public string stock_code { get; set; }
         public bool IsDelisted { get; set; }
+        public string pinyin { get; set; }
     
         public virtual ICollection<stock_history> stock_history { get; set; }
         public virtual ICollection<hypothesis_result> hypothesis_result { get; set; }
@@ -35,5 +38,7 @@ namespace DataAccess
         public virtual ICollection<stockma> stockmas { get; set; }
         public virtual ICollection<stockmacd> stockmacds { get; set; }
         public virtual ICollection<stock_extend_info> stock_extend_info { get; set; }
+        public virtual ICollection<stock_category_ref> stock_category_ref { get; set; }
+        public virtual ICollection<stock_income_statement_history> stock_income_statement_history { get; set; }
     }
 }

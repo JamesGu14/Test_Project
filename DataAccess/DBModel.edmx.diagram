@@ -26,6 +26,16 @@
         <AssociationConnector Association="StockTrackerModel.stockkdj_ibfk_3" />
         <EntityTypeShape EntityType="StockTrackerModel.stock_extend_info" Width="1.5" PointX="3" PointY="23.5" />
         <AssociationConnector Association="StockTrackerModel.stock_extend_info_ibfk_1" />
+        <EntityTypeShape EntityType="StockTrackerModel.market_index" Width="1.5" PointX="5.375" PointY="0.75" />
+        <EntityTypeShape EntityType="StockTrackerModel.market_index_history" Width="1.5" PointX="7.625" PointY="6.125" />
+        <EntityTypeShape EntityType="StockTrackerModel.stock_category" Width="1.5" PointX="7.375" PointY="0.75" />
+        <EntityTypeShape EntityType="StockTrackerModel.stock_category_ref" Width="1.5" PointX="7.375" PointY="3.75" />
+        <AssociationConnector Association="StockTrackerModel.market_index_history_ibfk_1" />
+        <AssociationConnector Association="StockTrackerModel.market_index_history_ibfk_2" />
+        <AssociationConnector Association="StockTrackerModel.stock_category_ref_ibfk_1" />
+        <AssociationConnector Association="StockTrackerModel.stock_category_ref_ibfk_2" />
+        <EntityTypeShape EntityType="StockTrackerModel.stock_income_statement_history" Width="1.5" PointX="3" PointY="28.125" />
+        <AssociationConnector Association="StockTrackerModel.stock_income_statement_history_ibfk_1" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
