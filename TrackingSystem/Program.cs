@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using DataAccess;
+using TrackingSystem.Signal;
 
 namespace TrackingSystem
 {
@@ -8,17 +9,17 @@ namespace TrackingSystem
     {
         public void KDJ_Golden()
         {
-            var resultList = new KDJ_Golden().GetKDJ_GoldenStock();
-            Console.WriteLine($"{resultList.Count} stocks matches KDJ Golden");
-            resultList.ForEach(Console.WriteLine);
+            //var resultList = new KDJ_Golden().GetKDJ_GoldenStock();
+            //Console.WriteLine($"{resultList.Count} stocks matches KDJ Golden");
+            //resultList.ForEach(Console.WriteLine);
         }
 
         public void MA_LongHedging()
         {
             // var resultList = new MA_LongHedging().GetMA_LongHedgingStock();
-            var resultList = new MA_LongHedging().GetMA_LongHedgingStock_JustStart();
-            Console.WriteLine($"{resultList.Count} stocks matches MA Long Hedging");
-            resultList.ForEach(Console.WriteLine);
+            //var resultList = new MA_LongHedging().GetMA_LongHedgingStock_JustStart();
+            //Console.WriteLine($"{resultList.Count} stocks matches MA Long Hedging");
+            //resultList.ForEach(Console.WriteLine);
         }
 
         public static void Main(string[] args)
@@ -29,7 +30,7 @@ namespace TrackingSystem
             // new Program().KDJ_Golden();
 
             // A2 均线多头排列
-            new Program().MA_LongHedging();
+            // new Program().MA_LongHedging();
 
             // A3 MACD底背离
 

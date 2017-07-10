@@ -10,6 +10,7 @@ using DataAccess.DomainModels;
 using DataImporter.Calculations;
 using DataImporter.ImportData;
 using StockTracker.Calculations;
+using System.Threading.Tasks;
 
 namespace DataImporter
 {
@@ -249,7 +250,12 @@ namespace DataImporter
             new Market2_TongDaXin().ImportData(SH_PATH);
             new Market2_TongDaXin().ImportData(SZ_PATH);
         }
-        
+
+        public void ImportIncomeStatementAsync()
+        {
+            new Income_Statement().ImportData();
+        }
+
         public static void Main(string[] args)
         {
             // 获取股票列表
@@ -258,7 +264,9 @@ namespace DataImporter
             #region Manual import stock
             var program = new Program();
 
-            program.ImportMarket();
+            program.ImportIncomeStatementAsync();
+
+            // program.ImportMarket();
 
             // program.NewImport();
             #endregion

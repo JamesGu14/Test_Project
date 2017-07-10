@@ -18,5 +18,27 @@ namespace DataAccess.DomainModels
         public string StockName { get; set; }
     }
 
-    
+    public class SHKObject
+    {
+        public stock Stock { get; set; }
+        public stock_history StockHistory { get; set; }
+        public stockkdj StockKdj { get; set; }
+    }
+
+    public class StockFullInfoObject
+    {
+        public stock Stock { get; set; }
+        public stock_history StockHistory { get; set; }
+        public stockmacd StockMacd { get; set; }
+        public stockma StockMa { get; set; }
+        public stockkdj StockKdj { get; set; }
+    }
+
+    public class SHMObject
+    {
+        public stock Stock { get; set; }
+        public stock_history StockHistory { get; set; }
+        public stockma StockMa { get; set; }
+    }
+
 }

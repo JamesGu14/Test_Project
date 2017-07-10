@@ -106,6 +106,8 @@ namespace DataAccess.DomainModels
         }
     }
 
+
+
     public class StockHistoryAndIndicator
     {
         public stock Stock { get; set; }

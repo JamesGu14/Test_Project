@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccess;
+using DataAccess.DomainModels;
 
 namespace TrackingSystem
 {
@@ -103,12 +104,5 @@ namespace TrackingSystem
 
             return resultList;
         }
-    }
-
-    public class SHMObject
-    {
-        public stock Stock { get; set; }
-        public stock_history StockHistory { get; set; }
-        public stockma StockMa { get; set; }
     }
 }

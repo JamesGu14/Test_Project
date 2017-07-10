@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using DataAccess.DomainModels;
 using StockTracker.Calculations;
-using StockTracker.FindDays;
 using StockTracker.Hypothesis;
 
 namespace StockTracker
@@ -72,7 +71,6 @@ namespace StockTracker
 
             // new Hypo_GoldenCross("000837");
 
-            FindDays2 fd = new FindDays2();
 
             Console.WriteLine("");
             Console.WriteLine("ProgramExecuting completed");

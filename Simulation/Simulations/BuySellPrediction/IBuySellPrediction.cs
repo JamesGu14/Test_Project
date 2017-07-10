@@ -6,7 +6,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccess.DomainModels;
-using Simulation.Models;
 
 namespace Simulation.Simulations.BuySellPrediction
 {

@@ -5,64 +5,123 @@ using System.Text;
 using System.Threading.Tasks;
 using DataAccess;
 using DataAccess.DomainModels;
-using Simulation.Models;
+using TrackingSystem.Signal;
+using Common;
 
 namespace Simulation.Simulations
 {
     public class KDJ_Simu
     {
-        private readonly int _stockId;
-        private readonly stock _stock;
-        private readonly List<StockHistoryAndIndicator> _stockHistoryAndIndicators;
+        private NewMoneyBag moneyBag;
+        private decimal budgetForEachStock;
+        private List<string> stockPool;
 
-        private const decimal INITIAL_AMOUNT = 10000;
+        public KDJ_Simu(int cash, decimal budgetForEachStock, List<string> stockPool)
+        {
+            this.budgetForEachStock = budgetForEachStock;
+            moneyBag = new NewMoneyBag(cash, budgetForEachStock);
+            this.stockPool = stockPool;
+        }
 
-        public KDJ_Simu(string stockCode, DateTime startDate, DateTime endDate)
+        public void Simulate(DateTime startDate, DateTime endDate)
         {
             using (var dbContext = new StockTrackerEntities())
             {
-                try
-                {
-                    this._stock = dbContext.stocks.FirstOrDefault(db => db.stock_code == stockCode);
-                    if (_stock == null)
-                    {
-                        return;
-                    }
-                    this._stockId = _stock.id;
+                List<stock_trading_date> tradingDates = dbContext.stock_trading_date.Where(d => d.trading_date >= startDate && d.trading_date <= endDate).ToList();
 
-                    this._stockHistoryAndIndicators = (from sh in dbContext.stock_history
-                                                 join kdj in dbContext.stockkdjs on sh.id equals kdj.stock_history_id
-                                                 join macd in dbContext.stockmacds on sh.id equals macd.stock_history_id
-                                                 join ma in dbContext.stockmas on sh.id equals ma.stock_history_id
-                                                 where sh.stock_id == _stockId && sh.stock_day > startDate && sh.stock_day < endDate
-                                                 orderby sh.stock_day
-                                                 select new StockHistoryAndIndicator
-                                                 {
-                                                     StockHistory = sh,
-                                                     StockKdj = kdj,
-                                                     StockMacd = macd,
-                                                     StockMa = ma
-                                                 }).ToList();
-
-                    if (this._stockHistoryAndIndicators.Count > 100)
-                    {
-                        ExecuteSimulation();
-                    }
-                    else
-                    {
-                        Console.WriteLine("Seems there is data issue");
-                    }
-                }
-                catch (Exception e)
+                foreach (var tradingDate in tradingDates)
                 {
-                    Console.WriteLine(e.StackTrace);
+                    var currentDate = tradingDate.trading_date;
+
+                    #region Step 1: Decide what to sell
+                    List<int> holdingStockList = moneyBag.HoldingStocks.Select(s => s.StockId).ToList();
+                    List<string> holdingStockCodeList = moneyBag.HoldingStocks.Select(s => s.StockCode).ToList();
+
+                    // If not holding any stock
+                    if (holdingStockCodeList.Any())
+                    {
+                        List<stock> toSellList = new KDJ_Golden(holdingStockCodeList, currentDate).GetKDJ_DeadCrossStock();
+                        List<int> toSellListId = toSellList.Select(s => s.id).ToList();
+
+
+                        List<int> commonStockIdList = toSellListId.FindCommonList(holdingStockList);
+
+                        if (commonStockIdList.Any())
+                        {
+                            List<stock_history> stockHistories = dbContext.stock_history
+                                .Where(sh => commonStockIdList.Contains(sh.stock_id) && sh.trading_date == tradingDate.id).ToList();
+                            toSellList = toSellList.Where(s => commonStockIdList.Contains(s.id)).ToList();
+                            toSellList.ForEach(s =>
+                            {
+                                var stockDayInfo = stockHistories.FirstOrDefault(sh => sh.stock_id == s.id);
+                                if (stockDayInfo != null)
+                                {
+                                    moneyBag.SellStock(s.id, stockDayInfo.open_price, currentDate, s.stock_code);
+                                }
+                            });
+                        }
+                    }
+
+                    #endregion
+
+                    #region Step 2: Decide what to buy
+                    if (moneyBag.Cash > budgetForEachStock)
+                    {
+                        List<stock> toBuyList = new KDJ_Golden(stockPool, currentDate).GetLowKDJ_GoldenCrossStock();
+                        List<int> toBuyListId = toBuyList.Select(s => s.id).ToList();
+                        holdingStockList = moneyBag.HoldingStocks.Select(s => s.StockId).ToList();
+                        int ableToBuyStockCount = (int)(moneyBag.Cash / budgetForEachStock);
+
+                        // Exclude already hold stocks
+                        toBuyListId = toBuyListId.ExcludeCommonList(holdingStockList);
+                        // Randomly pick specified amount of stocks
+
+                        if (toBuyListId.Any())
+                        {
+                            toBuyListId = toBuyListId.FindRandomItemsFromList(ableToBuyStockCount);
+                            List<stock_history> stockHistories = dbContext.stock_history
+                                .Where(sh => toBuyListId.Contains(sh.stock_id) && sh.trading_date == tradingDate.id).ToList();
+                            toBuyList = toBuyList.Where(s => toBuyListId.Contains(s.id)).ToList();
+
+                            foreach (var toBuyStock in toBuyList)
+                            {
+                                var stockDayInfo = stockHistories.FirstOrDefault(sh => sh.stock_id == toBuyStock.id);
+                                if (stockDayInfo != null)
+                                {
+                                    moneyBag.BuyStock(toBuyStock.id, stockDayInfo.open_price, currentDate, toBuyStock.stock_code);
+                                }
+                            }
+                        }
+                    }
+                    #endregion
+
+                    // Print log
+                    holdingStockList = moneyBag.HoldingStocks.Select(s => s.StockId).ToList();
+                    List<stock_history> holdingStockHistories = dbContext.stock_history
+                            .Where(sh => holdingStockList.Contains(sh.stock_id) && sh.trading_date == tradingDate.id).ToList();
+                    var currentHoldingStockList = moneyBag.HoldingStocks;
+
+                    List<HoldingStock> stockCurrentStatus = new List<HoldingStock>();
+                    foreach (var s in currentHoldingStockList)
+                    {
+                        // This is current day value. Don't get missed by property name
+                        if (holdingStockHistories.FirstOrDefault(hs => hs.stock_id == s.StockId) == null)
+                        {
+                            continue;
+                        }
+                        stockCurrentStatus.Add(new HoldingStock
+                        {
+                            StockId = s.StockId,
+                            StockCode = s.StockCode,
+                            PurchasePricePerShare = holdingStockHistories.FirstOrDefault(hs => hs.stock_id == s.StockId).close_price
+                        });
+                    }
+
+                    moneyBag.PrintLog(currentDate, stockCurrentStatus);
+
+                    Console.WriteLine(currentDate + " finished");
                 }
             }
-        }
-
-        private void ExecuteSimulation()
-        {
-            // new Simulation1().RunSimulation1(_stockId, INITIAL_AMOUNT, _stockHistoryAndIndicators);
         }
     }
 }

@@ -10,6 +10,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockTracker", "StockTracke
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{71E9835B-1898-49DD-98A7-BBD4CD0B9407}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E9257E59-514A-4BA1-B708-D97A704BA130} = {E9257E59-514A-4BA1-B708-D97A704BA130}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataImporter", "DataImporter\DataImporter.csproj", "{6BB06450-4623-463C-97A2-E131EC9D6CFD}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -35,8 +38,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProgram", "TestProgram\
 	ProjectSection(ProjectDependencies) = postProject
 		{71E9835B-1898-49DD-98A7-BBD4CD0B9407} = {71E9835B-1898-49DD-98A7-BBD4CD0B9407}
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockPoolStrategy", "StockPoolStrategy\StockPoolStrategy.csproj", "{A1D5FE0A-223D-4184-AA5E-CB6BBD888A0D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -72,10 +73,6 @@ Global
 		{55FBFE75-AD25-4A64-ACC7-F4F84C80F5A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55FBFE75-AD25-4A64-ACC7-F4F84C80F5A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55FBFE75-AD25-4A64-ACC7-F4F84C80F5A6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A1D5FE0A-223D-4184-AA5E-CB6BBD888A0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A1D5FE0A-223D-4184-AA5E-CB6BBD888A0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A1D5FE0A-223D-4184-AA5E-CB6BBD888A0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A1D5FE0A-223D-4184-AA5E-CB6BBD888A0D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

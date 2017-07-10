@@ -123,6 +123,7 @@
           <Property Name="net_profit" Type="decimal" Precision="14" Scale="2" />
           <Property Name="earnings_per_share" Type="decimal" Precision="4" Scale="4" />
           <Property Name="total_assets" Type="decimal" Precision="14" Scale="2" />
+          <Property Name="shareholder_amount" Type="int" />
         </EntityType>
         <EntityType Name="stock_trading_date">
           <Key>
@@ -952,6 +953,7 @@
           <Property Name="earnings_per_share" Type="Decimal" />
           <Property Name="total_assets" Type="Decimal" />
           <NavigationProperty Name="stock" Relationship="StockTrackerModel.stock_income_statement_history_ibfk_1" FromRole="stock_income_statement_history" ToRole="stock" />
+          <Property Name="shareholder_amount" Type="Int32" />
         </EntityType>
         <Association Name="stock_income_statement_history_ibfk_1">
           <End Type="StockTrackerModel.stock" Role="stock" Multiplicity="0..1" />
@@ -1148,6 +1150,7 @@
           <EntitySetMapping Name="stock_income_statement_history">
             <EntityTypeMapping TypeName="StockTrackerModel.stock_income_statement_history">
               <MappingFragment StoreEntitySet="stock_income_statement_history">
+                <ScalarProperty Name="shareholder_amount" ColumnName="shareholder_amount" />
                 <ScalarProperty Name="total_assets" ColumnName="total_assets" />
                 <ScalarProperty Name="earnings_per_share" ColumnName="earnings_per_share" />
                 <ScalarProperty Name="net_profit" ColumnName="net_profit" />

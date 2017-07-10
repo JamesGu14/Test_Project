@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using DataAccess;
 using DataAccess.DomainModels;
-using Simulation.Models;
 using Simulation.Simulations.BuySellPrediction;
 
 namespace Simulation.Simulations

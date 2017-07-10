@@ -21,6 +21,7 @@ namespace DataAccess
         public Nullable<decimal> net_profit { get; set; }
         public Nullable<decimal> earnings_per_share { get; set; }
         public Nullable<decimal> total_assets { get; set; }
+        public Nullable<int> shareholder_amount { get; set; }
     
         public virtual stock stock { get; set; }
     }

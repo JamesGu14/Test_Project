@@ -66,6 +66,7 @@
     <Compile Include="DomainModels\Extensions.cs" />
     <Compile Include="DomainModels\MarketIndexModel.cs" />
     <Compile Include="DomainModels\MoneyBag.cs" />
+    <Compile Include="DomainModels\NewMoneyBag.cs" />
     <Compile Include="DomainModels\StockHistoryModel.cs" />
     <Compile Include="DomainModels\StockModel.cs" />
     <Compile Include="hypothesis_result.cs">
@@ -140,6 +141,12 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{E9257E59-514A-4BA1-B708-D97A704BA130}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
