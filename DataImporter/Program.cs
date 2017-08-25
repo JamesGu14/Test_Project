@@ -28,9 +28,8 @@ namespace DataImporter
             using (var dbContext = new StockTrackerEntities())
             {
                 // && s.id > 130 && s.stock_code != "002092" && 
-                
 
-                
+                STOCK_CODES = dbContext.stocks.Select(s => s.stock_code).ToList();
             }
         }
         public string CallImport()
@@ -221,18 +220,23 @@ namespace DataImporter
 
 
                     // 计算一只股票所有交易日的MACD
-                    // new Program().CallCalculatingMACD(stockCode, new DateTime(2016, 1, 1), new DateTime(2017, 5, 26));
+                    CallCalculatingMACD(stockCode, new DateTime(2000, 1, 4), new DateTime(2017, 7, 11));
 
                     // 计算一只股票所有交易日的KDJ指标
-                    // new Program().CallCalculatingKDJ(stockCode, new DateTime(2016, 1, 1), new DateTime(2017, 5, 26));
+                    CallCalculatingKDJ(stockCode, new DateTime(2000, 1, 4), new DateTime(2017, 7, 11));
 
-                    new Program().CallCalculateMA(stockCode, new DateTime(2016, 1, 1), new DateTime(2017, 5, 26));
+                    CallCalculateMA(stockCode, new DateTime(2000, 1, 4), new DateTime(2017, 7, 11));
                 }
                 catch (Exception e)
                 {
                     Logger.Log($"[{stockCode}] - " + e.StackTrace);
                 }
             }
+        }
+        
+        public void NewImport2()
+        {
+            new StockHistory().ImportFromFile("C:\\export_bufuquan");
         }
         #endregion
 
@@ -264,11 +268,12 @@ namespace DataImporter
             #region Manual import stock
             var program = new Program();
 
-            program.ImportIncomeStatementAsync();
+            // program.NewImport2();
+            // program.ImportIncomeStatementAsync();
 
             // program.ImportMarket();
 
-            // program.NewImport();
+            program.NewImport();
             #endregion
 
             #region Calculate all KDJ

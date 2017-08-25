@@ -48,18 +48,22 @@ namespace StockTracker.Calculations
                 //}
 
                 // Set macd for the first trading day
-                //var stock_firstDay = stockHistories.OrderBy(sh => sh.stock_day).FirstOrDefault();
-                //stockMACDs.Add(new stockmacd
-                //{
-                //    ema12 = (float) stock_firstDay.close_price,
-                //    ema26 = (float)stock_firstDay.close_price,
-                //    diff = 0,
-                //    dea = 0,
-                //    macd = 0,
-                //    stock_day = stock_firstDay.stock_day,
-                //    stock_id = stock_firstDay.stock_id
-                //});
-
+                if (!stockMACDs.Any())
+                {
+                    var stock_firstDay = stockHistories.OrderBy(sh => sh.stock_day).FirstOrDefault();
+                    stockMACDs.Add(new stockmacd
+                    {
+                        ema12 = (float)stock_firstDay.close_price,
+                        ema26 = (float)stock_firstDay.close_price,
+                        diff = 0,
+                        dea = 0,
+                        macd = 0,
+                        stock_day = stock_firstDay.stock_day,
+                        stock_id = stock_firstDay.stock_id,
+                        stock_history = stock_firstDay
+                    });
+                }
+                
                 Console.Write($"Start Calculating {stock_code} MACD.");
 
                 // Start calculating

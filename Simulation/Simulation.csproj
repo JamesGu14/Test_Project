@@ -52,6 +52,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Simulations\BuySellPrediction\BuySellPrediction1.cs" />
     <Compile Include="Simulations\BuySellPrediction\BuySellPrediction2.cs" />
+    <Compile Include="Simulations\BuySellPrediction\BuySellPrediction3.cs" />
     <Compile Include="Simulations\BuySellPrediction\IBuySellPrediction.cs" />
     <Compile Include="Simulations\KDJ_Simu.cs" />
     <Compile Include="Simulations\SimulateByPoint.cs" />

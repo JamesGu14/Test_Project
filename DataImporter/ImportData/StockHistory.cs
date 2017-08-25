@@ -145,10 +145,107 @@ namespace DataImporter
             return string.Empty;
         }
 
+        public string ImportFromFile(string folderPath)
+        {
+            DirectoryInfo dir = new DirectoryInfo(folderPath);
 
+            FileInfo[] files = dir.GetFiles();
+
+            using (var dbContext = new StockTrackerEntities())
+            {
+                var stocks = dbContext.stocks.ToList();
+
+                foreach (var f in files)
+                {
+                    string stockCode = f.Name.Split('.')[0];
+                    if (!stocks.Any(s => s.stock_code == stockCode))
+                    {
+                        dbContext.stocks.Add(new stock
+                        {
+                            stock_code = stockCode,
+                            stock_name = "placeholder"
+                        });
+                    }
+                }
+                dbContext.SaveChanges();
+            }
+
+
+            foreach (var f in files)
+            {
+                using (var dbContext = new StockTrackerEntities())
+                {
+                    StreamReader file = new StreamReader(f.FullName);
+                    string line;
+
+                    string stockCode = f.Name.Split('.')[0];
+                    stock currentStock = dbContext.stocks.FirstOrDefault(s => s.stock_code == stockCode);
+                    List<stock_trading_date> tradingDates = dbContext.stock_trading_date.ToList();
+                    if (currentStock == null)
+                    {
+                        continue;
+                    }
+
+                    int stockId = currentStock.id;
+                    string content = "";
+                    while ((line = file.ReadLine()) != null)
+                    {
+                        if (!line.StartsWith("20"))
+                        {
+                            continue;
+                        }
+
+                        string[] split = line.Split(',');
+
+                        var tradingDate = new DateTime(int.Parse(split[0].Split('-')[0]), int.Parse(split[0].Split('-')[1]), int.Parse(split[0].Split('-')[2]));
+                        var tradindDateDb = tradingDates.FirstOrDefault(t => t.trading_date == tradingDate);
+
+                        if (tradindDateDb == null)
+                        {
+                            dbContext.stock_trading_date.Add(new stock_trading_date
+                            {
+                                trading_date = tradingDate
+                            });
+                            dbContext.SaveChanges();
+                            tradindDateDb = dbContext.stock_trading_date.FirstOrDefault(t => t.trading_date == tradingDate);
+                        }
+
+                        //newHistories.Add(new stock_history
+                        //{
+                        //    stock_id = stockId,
+                        //    trading_date = tradindDateDb.id,
+                        //    stock_day = tradingDate,
+                        //    open_price = decimal.Parse(split[1]),
+                        //    max_price = decimal.Parse(split[2]),
+                        //    min_price = decimal.Parse(split[3]),
+                        //    close_price = decimal.Parse(split[4]),
+                        //    trade_num = long.Parse(split[5]),
+                        //    trade_money = decimal.Parse(split[6]),
+                        //});
+                        content += $"insert into stock_history (stock_id, trading_date, stock_day, open_price, max_price, min_price, close_price, trade_num, trade_money) " +
+                            $"values({stockId}, {tradindDateDb.id}, '{string.Format("{0:yyyy-MM-dd}", tradingDate)}', {decimal.Parse(split[1])}, {decimal.Parse(split[2])}, {decimal.Parse(split[3])}, {decimal.Parse(split[4])}, {decimal.Parse(split[5])}, {decimal.Parse(split[6])});\r\n";
+                    }
+                    WriteSqlFile(content);
+                    Console.WriteLine($"{stockCode} finishes");
+                }
+            }
+
+            return "";
+        }
         public static bool CheckValidationResult(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors errors)
         {
             return true;
+        }
+
+        public void WriteSqlFile(string line)
+        {
+
+            // Write the string to a file.
+            StreamWriter file = File.AppendText("c:\\log\\output.sql");
+            file.WriteLine(line);
+
+            file.Close();
+
         }
     }
 }

@@ -12,7 +12,8 @@ namespace TestProgram
     {
         public static void Main(string[] args)
         {
-            new Program().ParseCsv("C:\\Projects\\sh2.csv");
+            // new Program().ParseCsv("C:\\Projects\\sh2.csv");
+            new Program().FixFileNames();
 
             Console.WriteLine("Processing all completed.");
             Console.Read();
@@ -99,6 +100,47 @@ namespace TestProgram
             }
 
             yield return line.Substring(line.LastIndexOf(",") + 1).Replace("\"", "").Replace(",", "");
+        }
+
+        public void FixFileNames()
+        {
+            string path = "C:\\export";
+            DirectoryInfo dir = new DirectoryInfo(path);
+
+            FileInfo[] files = dir.GetFiles();
+            foreach(var f in files)
+            {
+                StreamReader file = new StreamReader(f.FullName);
+                string line;
+
+                while ((line = file.ReadLine()) != null)
+                {
+                    if (!line.StartsWith("20"))
+                    {
+                        continue;
+                    }
+
+                    var isInvalidLine = false;
+
+                    string[] split = line.Split('\t');
+                    if (split.Length != 7)
+                    {
+                        isInvalidLine = true;
+                    }
+
+                    foreach(var s in split)
+                    {
+                        if (string.IsNullOrWhiteSpace(s))
+                        {
+                            isInvalidLine = true;
+                        }
+                    }
+                    if (isInvalidLine)
+                    {
+                        Console.WriteLine($"{f.FullName}  has issue: {line}");
+                    }
+                }
+            }
         }
     }
 }
